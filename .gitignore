@@ -1,0 +1,6 @@
+# Ignore local environment file
+.env
+
+# Ignore local data volumes
+n8n_data/
+db_data/

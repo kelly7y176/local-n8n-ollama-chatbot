@@ -1,0 +1,189 @@
+{
+  "name": "Local AI Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {
+          "responseMode": "responseNodes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        -144
+      ],
+      "id": "4610fd3f-b831-4318-81ce-c8672218b912",
+      "name": "When chat message received",
+      "webhookId": "bb35f857-d3ed-4ad5-b81e-8e2e200c763f"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful AI assistant named \"LocalBot\" running\nentirely on the user's computer using Ollama.\nYour capabilities:\n- Answer questions on various topics\n- Help with coding and technical issues\n- Explain concepts in simple terms\n- Remember conversation context\nYour style:\n- Be friendly and conversational\n- Keep responses concise (2-3 paragraphs max)\n- Ask clarifying questions when needed\n- Admit when you don't know something\nRemember: You're running locally with complete privacy!"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        624,
+        -144
+      ],
+      "id": "44283c22-2dac-46de-acb9-6b3b74b42dc1",
+      "name": "AI Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        80
+      ],
+      "id": "b11d12da-2920-4cf9-8a1f-e791b0305b01",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "04ebd0b1-4a9b-41ea-9f83-a4a5c7431b1b",
+      "name": "Respond to Chat"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        544,
+        64
+      ],
+      "id": "6e3aacd9-8437-40c0-a4a2-bbc8a0ccf331",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "svA3be120KLB6ITr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        864,
+        144
+      ],
+      "id": "35f574d3-4f8a-4acb-bb08-2939a4673f67",
+      "name": "Think"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        992,
+        112
+      ],
+      "id": "ac9fb5ac-b4af-4e2f-9b3a-39cdaa370996",
+      "name": "Calculator"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "601b4ea0-aa65-4a4b-bc63-8e2bc18bd9d7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5a8008a179ab245555fbb8ae9b9894b33f11b45b544dada2fbf95294a85905db"
+  },
+  "id": "sbC6jArCvldoP1Eq",
+  "tags": []
+}
